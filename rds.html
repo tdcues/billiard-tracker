@@ -1,0 +1,88 @@
+<!-- rds.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDS Practice Log</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  <div class="max-w-4xl mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8">
+    <h1 class="text-2xl font-bold mb-6">RDS Practice Log</h1>
+    <form id="rds-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <input type="date" id="date" required class="border p-2 rounded">
+      <input type="time" id="time" required class="border p-2 rounded">
+      <input type="text" id="level" placeholder="Level Achieved" class="border p-2 rounded">
+      <input type="text" id="location" placeholder="Table/Place" class="border p-2 rounded">
+      <input type="text" id="notes" placeholder="Notes" class="border p-2 rounded col-span-1 md:col-span-3">
+      <button type="submit" class="col-span-1 md:col-span-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Entry</button>
+    </form>
+
+    <table class="min-w-full bg-white border">
+      <thead>
+        <tr>
+          <th class="py-2 border">Date</th>
+          <th class="py-2 border">Time</th>
+          <th class="py-2 border">Level</th>
+          <th class="py-2 border">Location</th>
+          <th class="py-2 border">Notes</th>
+        </tr>
+      </thead>
+      <tbody id="entries"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
+    let currentUser = null;
+
+    async function loadUser() {
+      const { data, error } = await supabaseClient.auth.getUser();
+      if (error || !data.user) {
+        window.location.href = '/billiard-tracker/index.html';
+      }
+      currentUser = data.user;
+    }
+
+    async function loadEntries() {
+      const { data, error } = await supabaseClient.from('rds').select('*').eq('user_id', currentUser.id).order('date', { ascending: false });
+      if (data) {
+        const tbody = document.getElementById('entries');
+        tbody.innerHTML = data.map(row => `
+          <tr>
+            <td class="py-1 border px-2">${row.date}</td>
+            <td class="py-1 border px-2">${row.time}</td>
+            <td class="py-1 border px-2">${row.level}</td>
+            <td class="py-1 border px-2">${row.location}</td>
+            <td class="py-1 border px-2">${row.notes}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    document.getElementById('rds-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newEntry = {
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        level: document.getElementById('level').value,
+        location: document.getElementById('location').value,
+        notes: document.getElementById('notes').value
+      };
+
+      const { error } = await supabaseClient.from('rds').insert([newEntry]);
+      if (!error) {
+        e.target.reset();
+        loadEntries();
+      } else {
+        alert('Error adding entry: ' + error.message);
+      }
+    });
+
+    loadUser().then(loadEntries);
+  </script>
+</body>
+</html>
