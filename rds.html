@@ -9,19 +9,48 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen p-4 md:p-8">
-  <div class="max-w-4xl mx-auto bg-white shadow-md rounded p-4 md:p-8">
+  <div class="max-w-5xl mx-auto bg-white shadow-md rounded p-4 md:p-8">
 
-    <!-- Top Navigation -->
+    <!-- Navigation -->
     <div class="flex justify-between items-center mb-4">
       <a href="dashboard.html" class="text-blue-600 hover:underline text-sm">&larr; Back to Dashboard</a>
-      <h1 class="text-2xl font-bold text-center flex-grow">RDS Practice Log</h1>
+      <h1 class="text-xl md:text-2xl font-bold text-center flex-grow">RDS Practice Log</h1>
     </div>
 
-    <!-- RDS Synopsis Section -->
-    <div class="bg-gray-50 p-4 rounded mb-6 overflow-auto">
-      <h2 class="font-semibold mb-2">What is the Run‑Out Drill System (RDS)?</h2>
-      <p>The RDS is a progressive set of break‑and‑run challenges for pool players. You attempt three racks at your current level, advancing to the next level if you run 2 out of 3, staying the same level if you run 1, or dropping a level if you run none. The drill starts at novice levels (6 balls) and progresses up to pro‑level challenges (15 balls) :contentReference[oaicite:1]{index=1}.</p>
-      <p><em>Source: RDS Handout by Dr. Dave Alciatore, College of Billiards :contentReference[oaicite:2]{index=2}</em></p>
+    <!-- Synopsis Table -->
+    <div class="overflow-x-auto mb-8">
+      <h2 class="text-lg font-semibold mb-2">Run-Out Drill System (RDS) Summary</h2>
+      <p class="mb-4">Always take ball in hand immediately after the break, scratch on break is allowed. Start with level 6. Advance to next level if you win 2 of 3 racks, drop to previous level if you lose 3 in a row, otherwise continue to shoot at current level. You get additional BiH (ball in hand) on levels 2 - 9.</p>
+      <table class="min-w-full text-sm border">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-2 py-1">Level</th>
+            <th class="border px-2 py-1">Rack</th>
+            <th class="border px-2 py-1">Required Balls</th>
+            <th class="border px-2 py-1">Rules</th>
+            <th class="border px-2 py-1">Extra BiH</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="border px-2 py-1">1</td><td class="border px-2 py-1"><img src="rds/a.jpg" alt="Rack A" class="w-12"></td><td class="border px-2 py-1">Any 6</td><td class="border px-2 py-1">No cue ball (call)</td><td class="border px-2 py-1"></td></tr>
+          <tr><td>2</td><td><img src="rds/a.jpg" class="w-12"></td><td>Any 6</td><td>Any order (call)</td><td>5</td></tr>
+          <tr><td>3</td><td><img src="rds/a.jpg" class="w-12"></td><td>Any 6</td><td>Any order (call)</td><td>3</td></tr>
+          <tr><td>4</td><td><img src="rds/a.jpg" class="w-12"></td><td>Any 6</td><td>Any order (call)</td><td>2</td></tr>
+          <tr><td>5</td><td><img src="rds/a.jpg" class="w-12"></td><td>Any 6</td><td>Any order (call)</td><td>1</td></tr>
+          <tr><td>6</td><td><img src="rds/b.jpg" class="w-12"></td><td>3 stripes or 3 solids & 8</td><td>8-ball (call) + rotation (slop)</td><td>1</td></tr>
+          <tr><td>7</td><td><img src="rds/c.jpg" class="w-12"></td><td>Any 9</td><td>Any order (call)</td><td>1</td></tr>
+          <tr><td>8</td><td><img src="rds/d.jpg" class="w-12"></td><td>4 stripes or 4 solids & 8</td><td>8-ball (call) + rotation (slop)</td><td>1</td></tr>
+          <tr><td>9</td><td><img src="rds/e.jpg" class="w-12"></td><td>All 15</td><td>Any order (call)</td><td>2</td></tr>
+          <tr><td>10</td><td><img src="rds/a.jpg" class="w-12"></td><td>Any 6</td><td>Rotation (slop)</td><td></td></tr>
+          <tr><td>11</td><td><img src="rds/e.jpg" class="w-12"></td><td>All 15</td><td>Any order (call)</td><td></td></tr>
+          <tr><td>12</td><td><img src="rds/e.jpg" class="w-12"></td><td>All solids or stripes + 8</td><td>(call)</td><td></td></tr>
+          <tr><td>13</td><td><img src="rds/d.jpg" class="w-12"></td><td>4 stripes or 4 solids & 8</td><td>8-ball (call) + rotation (slop)</td><td></td></tr>
+          <tr><td>14</td><td><img src="rds/c.jpg" class="w-12"></td><td>Ball 1 - 9</td><td>Rotation (slop)</td><td></td></tr>
+          <tr><td>15</td><td><img src="rds/e.jpg" class="w-12"></td><td>All 15</td><td>8-ball (call) + rotation (slop)</td><td></td></tr>
+          <tr><td>16</td><td><img src="rds/e.jpg" class="w-12"></td><td>All 15</td><td>Rotation (slop)</td><td></td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-500 mt-2">Adapted from the RDS handout by Dr. Dave Alciatore and Shane McEwan. Used with acknowledgment. See: <a href="https://drdavepoolinfo.com/resource_files/RDS_handout.pdf" class="text-blue-500 underline" target="_blank">Original PDF</a></p>
     </div>
 
     <!-- Entry Form -->
@@ -39,11 +68,11 @@
       <table class="min-w-full bg-white border">
         <thead>
           <tr>
-            <th class="py-2 border px-2">Date</th>
-            <th class="py-2 border px-2">Time</th>
-            <th class="py-2 border px-2">Level</th>
-            <th class="py-2 border px-2">Location</th>
-            <th class="py-2 border px-2">Notes</th>
+            <th class="py-2 border">Date</th>
+            <th class="py-2 border">Time</th>
+            <th class="py-2 border">Level</th>
+            <th class="py-2 border">Location</th>
+            <th class="py-2 border">Notes</th>
           </tr>
         </thead>
         <tbody id="entries"></tbody>
@@ -60,29 +89,24 @@
     async function loadUser() {
       const { data, error } = await supabaseClient.auth.getUser();
       if (error || !data.user) {
-        window.location.href = 'index.html';
-      } else {
-        currentUser = data.user;
+        window.location.href = '/billiard-tracker/index.html';
       }
+      currentUser = data.user;
     }
 
     async function loadEntries() {
-      const { data, error } = await supabaseClient
-        .from('rds')
-        .select('*')
-        .order('date', { ascending: false });
+      const { data, error } = await supabaseClient.from('rds').select('*').eq('user_id', currentUser.id).order('date', { ascending: false });
       if (data) {
-        document.getElementById('entries').innerHTML = data
-          .filter(r => r.user_id === currentUser.id)
-          .map(r => `
-            <tr>
-              <td class="py-1 border px-2">${r.date}</td>
-              <td class="py-1 border px-2">${r.time}</td>
-              <td class="py-1 border px-2">${r.level}</td>
-              <td class="py-1 border px-2">${r.location}</td>
-              <td class="py-1 border px-2">${r.notes}</td>
-            </tr>
-          `).join('');
+        const tbody = document.getElementById('entries');
+        tbody.innerHTML = data.map(row => `
+          <tr>
+            <td class="py-1 border px-2">${row.date}</td>
+            <td class="py-1 border px-2">${row.time}</td>
+            <td class="py-1 border px-2">${row.level}</td>
+            <td class="py-1 border px-2">${row.location}</td>
+            <td class="py-1 border px-2">${row.notes}</td>
+          </tr>
+        `).join('');
       }
     }
 
@@ -95,6 +119,7 @@
         location: document.getElementById('location').value,
         notes: document.getElementById('notes').value
       };
+
       const { error } = await supabaseClient.from('rds').insert([newEntry]);
       if (!error) {
         e.target.reset();
