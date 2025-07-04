@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billiard Drill Tracker - Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-sm">
+    <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
+    <input id="email" type="email" placeholder="Email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4">
+    <input id="password" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4">
+    <button onclick="login()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Login</button>
+    <p class="text-center text-sm mt-4">New user? <a href="#" class="text-blue-500" onclick="signup()">Sign up</a></p>
+    <p id="status" class="text-red-500 text-sm mt-2 text-center"></p>
+  </div>
+
+  <script>
+    const supabase = supabase.createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
+    
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) document.getElementById('status').textContent = error.message;
+      else window.location.href = '/dashboard.html';
+    }
+
+    async function signup() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) document.getElementById('status').textContent = error.message;
+      else document.getElementById('status').textContent = "Signup successful, check your email.";
+    }
+  </script>
+</body>
+</html>
