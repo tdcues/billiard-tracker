@@ -11,7 +11,7 @@
 <body class="bg-gray-100 min-h-screen p-8">
   <div class="max-w-3xl mx-auto">
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
-      <h1 class="text-2xl font-bold mb-4">Welcome, <span id="user-email"></span></h1>
+      <h1 class="text-2xl font-bold mb-4">Welcome, <span id="user-greeting"></span></h1>
       <p class="mb-4">Choose a practice routine:</p>
       <ul class="space-y-2">
         <li><a href="rds.html" class="text-blue-600 hover:underline">1 - Runout Drills</a></li>
@@ -32,7 +32,8 @@
       if (error || !user) {
         window.location.href = '/billiard-tracker/index.html';
       } else {
-        document.getElementById('user-email').textContent = user.email;
+        const name = user.user_metadata?.display_name || user.email;
+        document.getElementById('user-greeting').textContent = name;
       }
     });
 
