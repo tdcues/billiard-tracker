@@ -1,0 +1,125 @@
+<!-- ballPocketing.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Ball Pocketing</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8">
+  <div class="max-w-4xl mx-auto bg-white shadow-md rounded p-4 md:p-8">
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center mb-4">
+      <a href="dashboard.html" class="text-blue-600 hover:underline text-sm">&larr; Back to Dashboard</a>
+      <h1 class="text-xl md:text-2xl font-bold text-center flex-grow">Ball Pocketing</h1>
+    </div>
+
+    <!-- Synopsis -->
+    <div class="mb-6">
+      <p class="mb-2">Shoot shots 1-5 from top CB and shots 6-10 from lower CB in the diagram below.</p>
+      <p class="mb-2">One attempt per shot. Scratches are not allowed.</p>
+      <p class="mb-2">Record your score below (maximum score is 10).</p>
+      <img src="ballPocketing/ballPocketing.jpg" alt="Ball Pocketing Drill" class="w-full max-w-md mx-auto mt-4">
+    </div>
+
+    <!-- Entry Form -->
+    <form id="pocketing-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div class="col-span-1">
+        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+        <input type="date" id="date" name="date" required class="block w-full border p-2 rounded bg-white text-gray-800 appearance-none">
+      </div>
+
+      <div class="col-span-1">
+        <label for="sessions" class="block text-sm font-medium text-gray-700 mb-1">Sessions</label>
+        <input type="number" id="sessions" name="sessions" min="1" max="20" placeholder="1-20" required class="block w-full border p-2 rounded bg-white text-gray-800">
+      </div>
+
+      <div class="col-span-1">
+        <label for="best" class="block text-sm font-medium text-gray-700 mb-1">Best</label>
+        <input type="number" id="best" name="best" min="0" max="10" placeholder="0-10" required class="block w-full border p-2 rounded bg-white text-gray-800">
+      </div>
+
+      <div class="col-span-1">
+        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Table/Place</label>
+        <input type="text" id="location" name="location" placeholder="Table/Place" class="block w-full border p-2 rounded">
+      </div>
+
+      <div class="col-span-1 md:col-span-2">
+        <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+        <input type="text" id="notes" name="notes" placeholder="Notes" class="block w-full border p-2 rounded">
+      </div>
+
+      <button type="submit" class="col-span-1 md:col-span-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Entry</button>
+    </form>
+
+    <!-- Entries Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border">
+        <thead>
+          <tr>
+            <th class="py-2 border">Date</th>
+            <th class="py-2 border">Sessions</th>
+            <th class="py-2 border">Best</th>
+            <th class="py-2 border">Location</th>
+            <th class="py-2 border">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="entries"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
+    let currentUser = null;
+
+    async function loadUser() {
+      const { data, error } = await supabaseClient.auth.getUser();
+      if (error || !data.user) {
+        window.location.href = '/billiard-tracker/index.html';
+      }
+      currentUser = data.user;
+    }
+
+    async function loadEntries() {
+      const { data } = await supabaseClient.from('ballpocketing').select('*').eq('user_id', currentUser.id).order('date', { ascending: false });
+      const tbody = document.getElementById('entries');
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td class="py-1 border px-2">${row.date}</td>
+          <td class="py-1 border px-2">${row.sessions}</td>
+          <td class="py-1 border px-2">${row.best}</td>
+          <td class="py-1 border px-2">${row.location}</td>
+          <td class="py-1 border px-2">${row.notes}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('pocketing-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newEntry = {
+        date: document.getElementById('date').value,
+        sessions: document.getElementById('sessions').value,
+        best: document.getElementById('best').value,
+        location: document.getElementById('location').value,
+        notes: document.getElementById('notes').value
+      };
+
+      const { error } = await supabaseClient.from('ballpocketing').insert([newEntry]);
+      if (!error) {
+        e.target.reset();
+        loadEntries();
+      } else {
+        alert('Error adding entry: ' + error.message);
+      }
+    });
+
+    loadUser().then(loadEntries);
+  </script>
+</body>
+</html>
