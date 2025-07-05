@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Billiard Drill Tracker - Login</title>
+  <title>Billiards Login | TDCues Training</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -12,7 +13,15 @@
     <h2 class="text-xl font-bold mb-4 text-center">Billiard Tracker Login</h2>
 
     <form id="login-form" class="space-y-4">
-      <input type="email" id="email" placeholder="Enter your email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight">
+      <input 
+        type="email" 
+        id="email" 
+        inputmode="email" 
+        autocomplete="email" 
+        placeholder="Enter your email" 
+        required 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight"
+      >
       <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Send Magic Link
       </button>
@@ -29,6 +38,7 @@
     async function handleMagicLinkLogin(e) {
       e.preventDefault();
       const email = document.getElementById("email").value;
+      const statusEl = document.getElementById("status");
 
       const { error } = await supabaseClient.auth.signInWithOtp({
         email: email,
@@ -37,11 +47,11 @@
         }
       });
 
-      const statusEl = document.getElementById("status");
       if (error) {
         statusEl.textContent = 'Error sending magic link: ' + error.message;
       } else {
         statusEl.textContent = 'Check your email for a login link!';
+        setTimeout(() => statusEl.textContent = '', 5000);
       }
     }
 
