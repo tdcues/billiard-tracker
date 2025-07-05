@@ -32,30 +32,54 @@
   </div>
 
   <script>
-    const { createClient } = supabase;
-    const supabaseClient = createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
+  const { createClient } = supabase;
+  const supabaseClient = createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
 
-    async function handleMagicLinkLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const statusEl = document.getElementById("status");
+  const form = document.getElementById("login-form");
+  const emailInput = document.getElementById("email");
+  const submitButton = form.querySelector("button[type='submit']");
+  const statusEl = document.getElementById("status");
 
-      const { error } = await supabaseClient.auth.signInWithOtp({
-        email: email,
-        options: {
-          emailRedirectTo: 'https://tdcues.github.io/billiard-tracker/dashboard.html'
-        }
-      });
+  async function handleMagicLinkLogin(e) {
+    e.preventDefault();
 
-      if (error) {
-        statusEl.textContent = 'Error sending magic link: ' + error.message;
-      } else {
-        statusEl.textContent = 'Check your email for a login link!';
-        setTimeout(() => statusEl.textContent = '', 5000);
+    const email = emailInput.value;
+    submitButton.disabled = true;
+    submitButton.textContent = "Sending...";
+    statusEl.textContent = "";
+
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: 'https://tdcues.github.io/billiard-tracker/dashboard.html'
       }
+    });
+
+    if (error) {
+      statusEl.textContent = 'Error sending magic link: ' + error.message;
+    } else {
+      statusEl.textContent = '✅ Magic link sent. Please check your inbox.';
     }
 
-    document.getElementById("login-form").addEventListener("submit", handleMagicLinkLogin);
-  </script>
+    submitButton.textContent = "Send Magic Link";
+
+    // Disable button for 60 seconds
+    let waitTime = 60;
+    const originalText = "Send Magic Link";
+
+    const interval = setInterval(() => {
+      waitTime--;
+      submitButton.textContent = `Wait ${waitTime}s`;
+      if (waitTime <= 0) {
+        clearInterval(interval);
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    }, 1000);
+  }
+
+  form.addEventListener("submit", handleMagicLinkLogin);
+</script>
+
 </body>
 </html>
