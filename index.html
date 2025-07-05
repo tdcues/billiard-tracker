@@ -9,40 +9,39 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
   <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-sm">
-    <h2 class="text-xl font-bold mb-4 text-center">Billiards-Traker Login v1</h2>
-    <input id="email" type="email" placeholder="Email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4">
-    <input id="password" type="password" placeholder="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight mb-4">
-    <button onclick="login()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Login</button>
+    <h2 class="text-xl font-bold mb-4 text-center">Billiards-Traker Login</h2>
+    <form id="login-form" class="...">
+      <input type="email" id="email" placeholder="Enter your email" required class="...">
+      <button type="submit">Send Magic Link</button>
+    </form>
     <p class="text-center text-sm mt-4">New user? <a href="#" class="text-blue-500" onclick="signup()">Sign up</a></p>
     <p id="status" class="text-red-500 text-sm mt-2 text-center"></p>
   </div>
 
   <script>
-    // Replace these values with your actual Supabase project credentials
-    const { createClient } = supabase;
-    const supabaseClient = createClient('https://tcqnxkdnceekjdxafcbf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRjcW54a2RuY2Vla2pkeGFmY2JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTM1MzAsImV4cCI6MjA2NzIyOTUzMH0.K28ihjuXgGlUHQBzt7DmBQN4-NE4xcKe276tGwIF5Xc');
+  const { createClient } = supabase;
+  const supabaseClient = createClient('https://YOUR_PROJECT_ID.supabase.co', 'YOUR_PUBLIC_ANON_KEY');
 
-    async function login() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) {
-        document.getElementById('status').textContent = error.message;
-      } else {
-        window.location.href = '/billiard-tracker/dashboard.html'; // Adjust path if needed
-      }
-    }
+  async function handleMagicLinkLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
 
-    async function signup() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const { error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) {
-        document.getElementById('status').textContent = error.message;
-      } else {
-        document.getElementById('status').textContent = "Signup successful, check your email.";
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email: email,
+      options: {
+        emailRedirectTo: 'https://tdcues.github.io/billiard-tracker/dashboard.html'
       }
+    });
+
+    if (error) {
+      alert('Error sending magic link: ' + error.message);
+    } else {
+      alert('Check your email for a login link!');
     }
-  </script>
+  }
+
+  document.getElementById("login-form").addEventListener("submit", handleMagicLinkLogin);
+</script>
+
 </body>
 </html>
