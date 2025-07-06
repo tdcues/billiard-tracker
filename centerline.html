@@ -116,7 +116,8 @@
         sessions: parseInt(document.getElementById('sessions').value),
         best: parseInt(document.getElementById('best').value),
         location: document.getElementById('location').value,
-        notes: document.getElementById('notes').value
+        notes: document.getElementById('notes').value,
+        user_id: currentUser.id
       };
 
       const { error } = await supabaseClient.from('centerline').insert([newEntry]);
