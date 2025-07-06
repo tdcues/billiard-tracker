@@ -103,7 +103,8 @@
         date: document.getElementById('date').value,
         pocket_dist: document.getElementById('pocket_dist').value,
         cb_dist: document.getElementById('cb_dist').value,
-        notes: document.getElementById('notes').value
+        notes: document.getElementById('notes').value,
+        user_id: currentUser.id
       };
 
       const { error } = await supabaseClient.from('visioncenter').insert([newEntry]);
